@@ -1,4 +1,4 @@
-package dev.openhealth.OpenHealth;
+package dev.openhealth.OpenHealth.usuario;
 
 import java.time.LocalDate;
 
