@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHealth - Cadastro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="user-icon">👤</div>
+            <h1>CADASTRE-SE</h1>
+            
+            <form id="cadastroForm">
+                <input id="nome" type="text" placeholder="Nome" required>
+                <input id="cpf" type="text" placeholder="CPF" required>
+
+                <div class="password-group">
+                    <input id="senha" type="password" placeholder="Senha" required>
+                    <input id="confirmarSenha" type="password" placeholder="Confirme a senha" required>
+                </div>
+                <button type="submit">Cadastrar</button>
+            </form>
+            
+            <p class="signup-text">
+                Já tem uma conta? <a href="index.html">Faça seu login aqui.</a>
+            </p>
+        </div>
+    </div>
+    
+    <script src="cadastro.js"></script>
+</body>
+</html>
