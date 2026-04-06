@@ -14,6 +14,7 @@ public class ModeloUsuario {
 
     private long id_usuario;
     private String nome;
+    private String senha;
     private LocalDate data_nascimento;
     private String cpf;
     private String tipo_sanguineo;
@@ -22,13 +23,18 @@ public class ModeloUsuario {
     public ModeloUsuario() {
     }
 
-    public ModeloUsuario(long id_usuario, String nome, LocalDate data_nascimento, String cpf, String tipo_sanguineo) {
+    public ModeloUsuario(long id_usuario, String nome, LocalDate data_nascimento, String cpf, String tipo_sanguineo, String senha) {
         this.id_usuario = id_usuario;
         this.nome = nome;
         this.data_nascimento = data_nascimento;
         this.cpf = cpf;
         this.tipo_sanguineo = tipo_sanguineo;
+        this.senha = senha;
     }
+
+    public String getSenha() {return senha; }
+
+    public void setSenha(String senha) {this.senha = senha; }
 
     public long getId_usuario() {
         return id_usuario;
