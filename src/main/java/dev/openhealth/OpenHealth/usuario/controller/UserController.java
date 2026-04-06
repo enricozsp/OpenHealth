@@ -1,5 +1,6 @@
 package dev.openhealth.OpenHealth.usuario.controller;
 
+import dev.openhealth.OpenHealth.usuario.dto.UserResponseDTO;
 import dev.openhealth.OpenHealth.usuario.entity.ModeloUsuario;
 import dev.openhealth.OpenHealth.usuario.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +20,12 @@ public class UserController {
     }
 
     @PostMapping("/cadastro")
-    public ModeloUsuario cadastrar(@RequestBody ModeloUsuario usuario) {
+    public UserResponseDTO cadastrar(@RequestBody ModeloUsuario usuario) {
         return service.cadastrar(usuario);
     }
 
     @PostMapping("/login")
-    public ModeloUsuario login(@RequestBody ModeloUsuario usuario) {
+    public UserResponseDTO login(@RequestBody ModeloUsuario usuario) {
         return service.login(usuario.getCpf(), usuario.getSenha());
     }
 

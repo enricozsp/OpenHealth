@@ -1,5 +1,6 @@
 package dev.openhealth.OpenHealth.usuario.service;
 
+import dev.openhealth.OpenHealth.usuario.dto.UserResponseDTO;
 import dev.openhealth.OpenHealth.usuario.entity.ModeloUsuario;
 import dev.openhealth.OpenHealth.usuario.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class UserService {
         this.repository = repository;
     }
 
-    public ModeloUsuario cadastrar(ModeloUsuario usuario) {
+    public UserResponseDTO cadastrar(ModeloUsuario usuario) {
 
         if (repository.findByCpf(usuario.getCpf()).isPresent()) {
             throw new RuntimeException("CPF ja cadastrado");
@@ -24,10 +25,13 @@ public class UserService {
         String senhaCriptografada = encoder.encode(usuario.getSenha());
         usuario.setSenha(senhaCriptografada);
 
-        return repository.save(usuario);
+        repository.save(usuario);
+
+        return new UserResponseDTO("Cadastro realizado com sucesso");
     }
 
-    public ModeloUsuario login(String cpf, String senha) {
+    public UserResponseDTO login(String cpf, String senha) {
+
         ModeloUsuario usuario = repository.findByCpf(cpf)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
@@ -35,6 +39,6 @@ public class UserService {
             throw new RuntimeException("Senha inválida");
         }
 
-        return usuario;
+        return new UserResponseDTO("Login realizado com sucesso. Bem vindo(a) "+ usuario.getNome());
     }
 }
