@@ -26,4 +26,15 @@ public class UserService {
 
         return repository.save(usuario);
     }
+
+    public ModeloUsuario login(String cpf, String senha) {
+        ModeloUsuario usuario = repository.findByCpf(cpf)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (!encoder.matches(senha, usuario.getSenha())) {
+            throw new RuntimeException("Senha inválida");
+        }
+
+        return usuario;
+    }
 }

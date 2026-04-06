@@ -1,7 +1,7 @@
 package dev.openhealth.OpenHealth.usuario.entity;
 
 import java.time.LocalDate;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 @Entity
@@ -12,9 +12,11 @@ public class ModeloUsuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private long id_usuario;
+    private Long id_usuario;
     private String nome;
     private String senha;
+
+    @JsonFormat(pattern = "yyy-MM-dd")
     private LocalDate data_nascimento;
 
     @Column(unique = true)
@@ -26,7 +28,7 @@ public class ModeloUsuario {
     public ModeloUsuario() {
     }
 
-    public ModeloUsuario(long id_usuario, String nome, LocalDate data_nascimento, String cpf, String tipo_sanguineo, String senha) {
+    public ModeloUsuario(Long id_usuario, String nome, LocalDate data_nascimento, String cpf, String tipo_sanguineo, String senha) {
         this.id_usuario = id_usuario;
         this.nome = nome;
         this.data_nascimento = data_nascimento;
@@ -39,11 +41,11 @@ public class ModeloUsuario {
 
     public void setSenha(String senha) {this.senha = senha; }
 
-    public long getId_usuario() {
+    public Long getId_usuario() {
         return id_usuario;
     }
 
-    public void setId_usuario(long id_usuario) {
+    public void setId_usuario(Long id_usuario) {
         this.id_usuario = id_usuario;
     }
 
