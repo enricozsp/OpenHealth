@@ -1,4 +1,4 @@
-package dev.openhealth.OpenHealth.usuario;
+package dev.openhealth.OpenHealth.usuario.entity;
 
 import java.time.LocalDate;
 
@@ -16,7 +16,10 @@ public class ModeloUsuario {
     private String nome;
     private String senha;
     private LocalDate data_nascimento;
+
+    @Column(unique = true)
     private String cpf;
+
     private String tipo_sanguineo;
 
 
