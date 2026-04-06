@@ -11,11 +11,13 @@ public class ModeloUsuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id_usuario;
-    String nome;
-    LocalDate data_nascimento;
-    String cpf;
-    String tipo_sanguineo;
+
+    private long id_usuario;
+    private String nome;
+    private LocalDate data_nascimento;
+    private String cpf;
+    private String tipo_sanguineo;
+
 
     public ModeloUsuario() {
     }
