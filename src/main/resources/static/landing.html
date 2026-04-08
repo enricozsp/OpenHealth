@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHealth - Dashboard</title>
+    <link rel="stylesheet" href="landing-style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="navbar">
+            <div class="navbar-left">
+                <h2 class="logo">OpenHealth</h2>
+            </div>
+            <div class="navbar-right">
+                <span class="welcome-text">BEM-VINDO(A) <span id="userName">FULANO</span></span>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+        </nav>
+
+        <div class="content">
+            <div class="greeting-section">
+                <div class="greeting-icon">👤</div>
+                <h1>Olá, <span id="userNameLarge">FULANO</span>!</h1>
+                <p>Bem-vindo ao OpenHealth</p>
+            </div>
+
+            <div class="dashboard-cards">
+                <div class="card">
+                    <div class="card-icon">📋</div>
+                    <h3>Meu Perfil</h3>
+                    <p>Visualize e edite seus dados pessoais</p>
+                    <button onclick="goToProfile()">Acessar</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">⚕️</div>
+                    <h3>Consultas</h3>
+                    <p>Agendamento e histórico de consultas</p>
+                    <button onclick="goToConsultations()">Acessar</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>Meu Histórico</h3>
+                    <p>Acompanhe seu histórico médico</p>
+                    <button onclick="goToHistory()">Acessar</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-icon">⚙️</div>
+                    <h3>Configurações</h3>
+                    <p>Altere senha e preferências</p>
+                    <button onclick="goToSettings()">Acessar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="landing-script.js"></script>
+</body>
+</html>

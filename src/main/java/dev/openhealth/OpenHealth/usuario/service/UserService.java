@@ -39,6 +39,6 @@ public class UserService {
             throw new RuntimeException("Senha inválida");
         }
 
-        return new UserResponseDTO("Login realizado com sucesso. Bem vindo(a) "+ usuario.getNome());
+        return new UserResponseDTO("Login realizado com sucesso. Bem vindo(a) "+ usuario.getNome(), usuario.getNome());
     }
 }
