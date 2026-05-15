@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar (Médico) · OpenHealth</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<div class="auth-card auth-doctor">
+    <div class="auth-header">
+        <h1>OpenHealth · Médico</h1>
+        <p>Acesso profissional ao prontuário do paciente</p>
+    </div>
+    <div class="auth-body">
+        <form id="loginForm" novalidate>
+            <div class="message" id="msg"></div>
+            <label class="full">Email
+                <input type="email" name="email" autocomplete="username" required>
+            </label>
+            <label class="full">Senha
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <div class="full">
+                <button type="submit" class="primary" id="submitBtn">Entrar</button>
+            </div>
+        </form>
+    </div>
+    <div class="auth-footer">
+        Ainda não tem conta? <a href="cadastro-medico.html">Cadastre-se como médico</a>
+        <div class="auth-alt">É paciente? <a href="login.html">Entrar como paciente</a></div>
+    </div>
+</div>
+
+<script>
+const form = document.getElementById('loginForm');
+const msg = document.getElementById('msg');
+const submitBtn = document.getElementById('submitBtn');
+
+function showMessage(text, type) {
+    msg.textContent = text;
+    msg.className = 'message show ' + type;
+}
+
+(async function checkStatus() {
+    try {
+        const res = await fetch('/api/doctor-auth/status');
+        const data = await res.json();
+        if (data.authenticated) {
+            window.location.href = '/painel-medico.html';
+        }
+    } catch (e) { /* ignore */ }
+})();
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.className = 'message';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Entrando...';
+    try {
+        const body = {
+            email: form.email.value.trim(),
+            password: form.password.value
+        };
+        const res = await fetch('/api/doctor-auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: 'Falha no login' }));
+            showMessage(err.error || 'Falha no login', 'error');
+            return;
+        }
+        window.location.href = '/painel-medico.html';
+    } catch (err) {
+        showMessage('Erro de conexão: ' + err.message, 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar';
+    }
+});
+</script>
+</body>
+</html>

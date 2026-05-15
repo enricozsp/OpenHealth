@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro · OpenHealth</title>
+    <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<div class="auth-card wide">
+    <div class="auth-header">
+        <h1>Criar wallet de saúde</h1>
+        <p>Seus dados ficam com você. Você é o dono do seu prontuário.</p>
+    </div>
+    <div class="auth-body">
+        <form id="registerForm" novalidate>
+            <div class="message" id="msg"></div>
+
+            <label class="full">Nome completo *
+                <input type="text" name="fullName" autocomplete="name" required>
+            </label>
+
+            <label>Email *
+                <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label>Telefone
+                <input type="tel" name="phone" autocomplete="tel">
+            </label>
+
+            <label>Senha *
+                <input type="password" name="password" autocomplete="new-password" minlength="6" required>
+            </label>
+            <label>Confirmar senha *
+                <input type="password" name="passwordConfirm" autocomplete="new-password" minlength="6" required>
+            </label>
+
+            <label>Data de nascimento
+                <input type="date" name="birthDate">
+            </label>
+            <label>Gênero
+                <input type="text" name="gender" placeholder="ex.: Feminino, Masculino, Não-binário">
+            </label>
+
+            <label>Documento (CPF/RG)
+                <input type="text" name="document">
+            </label>
+            <label>Tipo sanguíneo
+                <select name="bloodType">
+                    <option value="">—</option>
+                    <option>A+</option><option>A-</option>
+                    <option>B+</option><option>B-</option>
+                    <option>AB+</option><option>AB-</option>
+                    <option>O+</option><option>O-</option>
+                </select>
+            </label>
+
+            <div class="notice">* Campos obrigatórios. Os demais são opcionais — você pode preencher depois na aba Perfil.</div>
+
+            <div class="full">
+                <button type="submit" class="primary" id="submitBtn">Criar minha wallet</button>
+            </div>
+        </form>
+    </div>
+    <div class="auth-footer">
+        Já tem conta? <a href="login.html">Entrar</a>
+        <div class="auth-alt">É médico? <a href="cadastro-medico.html">Cadastrar-se como médico</a></div>
+    </div>
+</div>
+
+<script>
+const form = document.getElementById('registerForm');
+const msg = document.getElementById('msg');
+const submitBtn = document.getElementById('submitBtn');
+
+function showMessage(text, type) {
+    msg.textContent = text;
+    msg.className = 'message show ' + type;
+    msg.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+(async function checkStatus() {
+    try {
+        const res = await fetch('/api/auth/status');
+        const data = await res.json();
+        if (data.authenticated) {
+            window.location.href = '/';
+        }
+    } catch (e) { /* ignore */ }
+})();
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.className = 'message';
+
+    const data = {};
+    new FormData(form).forEach((v, k) => { data[k] = v === '' ? null : v; });
+
+    if (data.password !== data.passwordConfirm) {
+        showMessage('As senhas não conferem.', 'error');
+        return;
+    }
+    if (!data.password || data.password.length < 6) {
+        showMessage('A senha deve ter ao menos 6 caracteres.', 'error');
+        return;
+    }
+    delete data.passwordConfirm;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Criando...';
+    try {
+        const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({ error: 'Falha no cadastro' }));
+            const detail = err.error || (err.errors && err.errors[0] && err.errors[0].defaultMessage) || 'Falha no cadastro';
+            showMessage(detail, 'error');
+            return;
+        }
+        showMessage('Conta criada! Redirecionando...', 'success');
+        setTimeout(() => { window.location.href = '/'; }, 700);
+    } catch (err) {
+        showMessage('Erro de conexão: ' + err.message, 'error');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Criar minha wallet';
+    }
+});
+</script>
+</body>
+</html>

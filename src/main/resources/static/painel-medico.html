@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHealth · Painel Médico</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/medico.css">
+</head>
+<body>
+<header class="topbar topbar-doctor">
+    <div class="brand">
+        <h1>OpenHealth · Médico</h1>
+        <span class="tagline">Você vê apenas o que cada paciente decidir compartilhar com você.</span>
+    </div>
+    <div class="owner-area">
+        <span class="owner" id="doctorName">—</span>
+        <button id="logoutBtn" class="logout" type="button">Sair</button>
+    </div>
+</header>
+
+<main>
+    <section class="panel active">
+        <div class="requests-header">
+            <h2>Requisições de compartilhamento</h2>
+            <button type="button" class="ghost" id="refreshBtn">Atualizar</button>
+        </div>
+        <p class="hint">Pacientes que liberaram seu prontuário para você. Clique para ver os dados.</p>
+        <div id="requestsList" class="requests-list">
+            <div class="empty">Carregando...</div>
+        </div>
+    </section>
+
+    <section id="patientPanel" class="panel" style="display:none;">
+        <h2 id="patientHeader">Prontuário</h2>
+        <p class="hint" id="patientSubheader"></p>
+        <div id="sharingBadges" class="sharing-badges"></div>
+        <div id="prontuarioContent"></div>
+    </section>
+</main>
+
+<footer>
+    <small>OpenHealth · Acesso médico ao prontuário compartilhado pelo paciente.</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/medico.js"></script>
+</body>
+</html>

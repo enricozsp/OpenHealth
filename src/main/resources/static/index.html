@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenHealth - Meu Prontuário</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand">
+        <h1>OpenHealth</h1>
+        <span class="tagline">Sua wallet de saúde. Seus dados, seu controle.</span>
+    </div>
+    <div class="owner-area">
+        <span class="owner" id="ownerName">—</span>
+        <button id="logoutBtn" class="logout" type="button">Sair</button>
+    </div>
+</header>
+
+<nav class="tabs" id="tabs">
+    <button class="tab active" data-tab="profile">Perfil</button>
+    <button class="tab" data-tab="anamnese">Anamnese</button>
+    <button class="tab" data-tab="allergies">Alergias</button>
+    <button class="tab" data-tab="vaccines">Vacinas</button>
+    <button class="tab" data-tab="surgeries">Cirurgias</button>
+    <button class="tab" data-tab="consultations">Consultas</button>
+    <button class="tab" data-tab="exams">Exames</button>
+    <button class="tab" data-tab="timeline">Linha do Tempo</button>
+    <button class="tab" data-tab="sharing">Compartilhamento</button>
+</nav>
+
+<main>
+    <!-- PERFIL -->
+    <section class="panel active" id="panel-profile">
+        <h2>Perfil do Titular</h2>
+        <p class="hint">Os dados do seu cadastro aparecem aqui. Complete o restante quando quiser.</p>
+        <form id="profileForm" class="form-grid">
+            <label>Nome completo <input name="fullName" placeholder="ex.: Maria da Silva Souza" required></label>
+            <label>Data de nascimento <input name="birthDate" type="date" placeholder="dd/mm/aaaa"></label>
+            <label>Gênero <input name="gender" placeholder="ex.: Feminino, Masculino, Não-binário"></label>
+            <label>Tipo sanguíneo
+                <select name="bloodType">
+                    <option value="">— selecione —</option>
+                    <option>A+</option><option>A-</option>
+                    <option>B+</option><option>B-</option>
+                    <option>AB+</option><option>AB-</option>
+                    <option>O+</option><option>O-</option>
+                </select>
+            </label>
+            <label>Documento (CPF/RG) <input name="document" placeholder="ex.: 123.456.789-00"></label>
+            <label>Telefone <input name="phone" placeholder="ex.: (11) 98765-4321"></label>
+            <label>Email <input name="email" type="email" placeholder="ex.: maria@exemplo.com"></label>
+            <label>Contato de emergência <input name="emergencyContact" placeholder="ex.: João Souza — (11) 91234-5678"></label>
+            <label class="full">Observações
+                <textarea name="notes" rows="3" placeholder="Qualquer informação relevante: plano de saúde, preferências, restrições, etc."></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Salvar perfil</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- ANAMNESE -->
+    <section class="panel" id="panel-anamnese">
+        <h2>Anamnese &amp; Antecedentes</h2>
+        <form id="anamneseForm" class="form-grid">
+            <label class="full">Queixa principal
+                <textarea name="mainComplaint" rows="2" placeholder="O que mais te incomoda atualmente. ex.: dor de cabeça há 3 dias"></textarea>
+            </label>
+            <label class="full">História da doença atual
+                <textarea name="currentDiseaseHistory" rows="3" placeholder="Como começou, evolução, fatores que melhoram/pioram. ex.: dor pulsátil iniciada após esforço, piora com luz, melhora em repouso"></textarea>
+            </label>
+            <label class="full">Antecedentes pessoais (doenças prévias, internações)
+                <textarea name="personalHistory" rows="3" placeholder="ex.: hipertensão desde 2018; internado em 2020 por pneumonia"></textarea>
+            </label>
+            <label class="full">Antecedentes familiares
+                <textarea name="familyHistory" rows="3" placeholder="Doenças importantes na família. ex.: mãe diabética; pai com infarto aos 55 anos"></textarea>
+            </label>
+            <label class="full">Hábitos de vida (tabagismo, álcool, atividade física, sono)
+                <textarea name="lifeHabits" rows="3" placeholder="ex.: não fumante; bebe socialmente; corre 3x por semana; dorme 7h"></textarea>
+            </label>
+            <label class="full">Medicações em uso
+                <textarea name="medications" rows="3" placeholder="Nome, dose e frequência. ex.: Losartana 50mg 1x/dia; Vitamina D 2.000UI 1x/dia"></textarea>
+            </label>
+            <label class="full">Outras informações
+                <textarea name="otherInfo" rows="2" placeholder="Qualquer informação relevante adicional"></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Salvar anamnese</button>
+            </div>
+        </form>
+    </section>
+
+    <!-- ALERGIAS -->
+    <section class="panel" id="panel-allergies">
+        <h2>Alergias</h2>
+        <form id="allergyForm" class="form-grid card-form" data-endpoint="/api/allergies">
+            <input type="hidden" name="id">
+            <label>Substância <input name="substance" placeholder="ex.: Penicilina, Dipirona, amendoim" required></label>
+            <label>Reação <input name="reaction" placeholder="ex.: urticária, falta de ar, anafilaxia"></label>
+            <label>Gravidade
+                <select name="severity">
+                    <option value="">— selecione —</option>
+                    <option>Leve</option><option>Moderada</option><option>Grave</option>
+                </select>
+            </label>
+            <label>Identificada em <input name="identifiedOn" type="date" placeholder="dd/mm/aaaa"></label>
+            <label class="full">Observações
+                <textarea name="notes" rows="2" placeholder="ex.: confirmada por teste alérgico; usar pulseira de identificação"></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Adicionar</button>
+                <button type="button" class="ghost" data-clear>Limpar</button>
+            </div>
+        </form>
+        <div class="list" id="allergyList"></div>
+    </section>
+
+    <!-- VACINAS -->
+    <section class="panel" id="panel-vaccines">
+        <h2>Vacinas</h2>
+        <form id="vaccineForm" class="form-grid card-form" data-endpoint="/api/vaccines">
+            <input type="hidden" name="id">
+            <label>Vacina <input name="name" placeholder="ex.: COVID-19, Hepatite B, Tríplice viral" required></label>
+            <label>Dose <input name="dose" placeholder="ex.: 1ª dose, Reforço, Dose única"></label>
+            <label>Fabricante <input name="manufacturer" placeholder="ex.: Pfizer, Butantan, AstraZeneca"></label>
+            <label>Lote <input name="batch" placeholder="ex.: FK4567"></label>
+            <label>Aplicada em <input name="appliedOn" type="date" placeholder="dd/mm/aaaa"></label>
+            <label>Próxima dose <input name="nextDoseOn" type="date" placeholder="dd/mm/aaaa"></label>
+            <label class="full">Local de aplicação <input name="appliedAt" placeholder="ex.: UBS Vila Mariana, Clínica Saúde Total"></label>
+            <label class="full">Observações
+                <textarea name="notes" rows="2" placeholder="ex.: reação local leve; viagem internacional exigia comprovante"></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Adicionar</button>
+                <button type="button" class="ghost" data-clear>Limpar</button>
+            </div>
+        </form>
+        <div class="list" id="vaccineList"></div>
+    </section>
+
+    <!-- CIRURGIAS -->
+    <section class="panel" id="panel-surgeries">
+        <h2>Cirurgias</h2>
+        <form id="surgeryForm" class="form-grid card-form" data-endpoint="/api/surgeries">
+            <input type="hidden" name="id">
+            <label>Procedimento <input name="procedure" placeholder="ex.: Apendicectomia, Colecistectomia laparoscópica" required></label>
+            <label>Realizada em <input name="performedOn" type="date" placeholder="dd/mm/aaaa"></label>
+            <label>Hospital <input name="hospital" placeholder="ex.: Hospital Albert Einstein"></label>
+            <label>Cirurgião <input name="surgeon" placeholder="ex.: Dr. Ana Lima — CRM 12345/SP"></label>
+            <label>Anestesia <input name="anesthesia" placeholder="ex.: Geral, Raquianestesia, Local"></label>
+            <label class="full">Observações
+                <textarea name="notes" rows="2" placeholder="ex.: cirurgia de urgência; alta no mesmo dia; sem intercorrências"></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Adicionar</button>
+                <button type="button" class="ghost" data-clear>Limpar</button>
+            </div>
+        </form>
+        <div class="list" id="surgeryList"></div>
+    </section>
+
+    <!-- CONSULTAS -->
+    <section class="panel" id="panel-consultations">
+        <h2>Consultas e Check-ups</h2>
+        <form id="consultationForm" class="form-grid card-form" data-endpoint="/api/consultations">
+            <input type="hidden" name="id">
+            <label>Data <input name="date" type="date" placeholder="dd/mm/aaaa"></label>
+            <label>Especialidade <input name="specialty" placeholder="ex.: Clínico geral, Cardiologia, Dermatologia"></label>
+            <label>Profissional <input name="professional" placeholder="ex.: Dr. Carlos Pereira — CRM 67890/SP"></label>
+            <label>Local <input name="location" placeholder="ex.: Hospital Sírio-Libanês, Consultório particular"></label>
+            <label class="full">Motivo <input name="reason" placeholder="ex.: check-up anual, dor no peito, revisão pós-cirúrgica"></label>
+            <label class="full">Diagnóstico
+                <textarea name="diagnosis" rows="2" placeholder="ex.: hipertensão controlada; CID I10"></textarea>
+            </label>
+            <label class="full">Prescrição
+                <textarea name="prescription" rows="2" placeholder="ex.: Losartana 50mg — 1 comprimido pela manhã, por 30 dias"></textarea>
+            </label>
+            <label class="full">Observações
+                <textarea name="notes" rows="2" placeholder="ex.: retorno em 3 meses; manter dieta com baixo sódio"></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Adicionar</button>
+                <button type="button" class="ghost" data-clear>Limpar</button>
+            </div>
+        </form>
+        <div class="list" id="consultationList"></div>
+    </section>
+
+    <!-- EXAMES -->
+    <section class="panel" id="panel-exams">
+        <h2>Exames Clínicos</h2>
+        <form id="examForm" class="form-grid card-form" data-endpoint="/api/exams">
+            <input type="hidden" name="id">
+            <label>Nome do exame <input name="name" placeholder="ex.: Hemograma completo, Raio-X de tórax, Ressonância" required></label>
+            <label>Categoria
+                <select name="category">
+                    <option value="">— selecione —</option>
+                    <option>Sangue</option>
+                    <option>Imagem</option>
+                    <option>Urina</option>
+                    <option>Cardiológico</option>
+                    <option>Endoscópico</option>
+                    <option>Outro</option>
+                </select>
+            </label>
+            <label>Realizado em <input name="performedOn" type="date" placeholder="dd/mm/aaaa"></label>
+            <label>Laboratório <input name="laboratory" placeholder="ex.: Fleury, Dasa, Sabin"></label>
+            <label class="full">Solicitante <input name="requestedBy" placeholder="ex.: Dr. Ana Lima — Cardiologia"></label>
+            <label class="full">Resultado
+                <textarea name="result" rows="3" placeholder="Resumo do laudo ou valores principais. ex.: Hemoglobina 14,2 g/dL; Glicemia jejum 92 mg/dL — dentro da normalidade"></textarea>
+            </label>
+            <label class="full">Observações
+                <textarea name="notes" rows="2" placeholder="ex.: jejum de 12h; repetir em 6 meses"></textarea>
+            </label>
+            <div class="actions full">
+                <button type="submit" class="primary">Adicionar</button>
+                <button type="button" class="ghost" data-clear>Limpar</button>
+            </div>
+        </form>
+        <div class="list" id="examList"></div>
+    </section>
+
+    <!-- LINHA DO TEMPO -->
+    <section class="panel" id="panel-timeline">
+        <h2>Linha do Tempo</h2>
+        <p class="hint">Todos os seus registros datados em ordem cronológica. Use os filtros para focar em um tipo específico.</p>
+        <div class="timeline-toolbar">
+            <div class="timeline-filters" id="timelineFilters">
+                <button type="button" class="chip active" data-filter="all">Todos</button>
+                <button type="button" class="chip type-allergy" data-filter="allergy">Alergias</button>
+                <button type="button" class="chip type-vaccine" data-filter="vaccine">Vacinas</button>
+                <button type="button" class="chip type-surgery" data-filter="surgery">Cirurgias</button>
+                <button type="button" class="chip type-consultation" data-filter="consultation">Consultas</button>
+                <button type="button" class="chip type-exam" data-filter="exam">Exames</button>
+            </div>
+            <button type="button" class="ghost" id="timelineRefresh">Recarregar</button>
+        </div>
+        <div class="timeline" id="timeline">
+            <div class="empty">Carregando...</div>
+        </div>
+        <div class="timeline-undated" id="timelineUndated"></div>
+    </section>
+
+    <!-- COMPARTILHAMENTO -->
+    <section class="panel" id="panel-sharing">
+        <h2>Compartilhamento com médicos</h2>
+        <p class="hint">Escolha um médico cadastrado e marque exatamente quais seções deseja compartilhar com ele. Cada médico vê apenas as seções que você liberar para ele.</p>
+
+        <div class="share-add">
+            <label class="share-add-label">Adicionar médico
+                <select id="doctorSelector">
+                    <option value="">— selecione um médico —</option>
+                </select>
+            </label>
+            <button type="button" class="primary" id="addDoctorBtn">Adicionar à minha lista</button>
+        </div>
+
+        <div id="sharesList" class="shares-list"></div>
+    </section>
+</main>
+
+<footer>
+    <small>OpenHealth · Os seus dados de saúde pertencem a você.</small>
+</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
