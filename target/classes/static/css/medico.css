@@ -1,0 +1,155 @@
+.topbar-doctor {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%) !important;
+}
+
+.panel h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: #1e3a8a;
+    font-size: 1.05rem;
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 0.3rem;
+}
+
+.sharing-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.5rem 0 1.25rem;
+}
+
+.badge {
+    font-size: 0.78rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.badge.on {
+    background: #dbeafe;
+    color: #1e3a8a;
+    border: 1px solid #93c5fd;
+}
+
+.badge.off {
+    background: #f3f4f6;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    text-decoration: line-through;
+}
+
+.kv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.5rem 1rem;
+    background: var(--bg);
+    padding: 0.9rem 1.1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+
+.kv-grid .kv b {
+    color: var(--text);
+    margin-right: 0.3rem;
+}
+
+.kv-grid .kv {
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.empty-section {
+    color: var(--muted);
+    font-style: italic;
+    padding: 0.6rem 0;
+}
+
+.record.read-only {
+    border-left-color: #2563eb;
+}
+
+.section-empty {
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    padding: 0.6rem 0.9rem;
+    border-radius: 8px;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.requests-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.requests-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.request-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    transition: box-shadow 0.15s, transform 0.05s;
+}
+
+.request-card:hover {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.request-card.active {
+    background: #eff6ff;
+    border-left-width: 6px;
+}
+
+.request-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.request-name {
+    font-weight: 600;
+    color: #1e3a8a;
+    font-size: 1.05rem;
+}
+
+.request-when {
+    color: var(--muted);
+    font-size: 0.82rem;
+}
+
+.request-email {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-top: 0.1rem;
+}
+
+.request-summary {
+    margin-top: 0.5rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.request-summary b { color: #1e3a8a; }
+
+.requests-empty {
+    background: var(--bg);
+    border: 1px dashed var(--border);
+    color: var(--muted);
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 8px;
+    font-style: italic;
+}

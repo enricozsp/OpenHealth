@@ -5,6 +5,13 @@ import com.openhealth.model.PatientShare;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
+/**
+ * Single source of truth for the sections a patient can share with a doctor.
+ *
+ * Adding a new section: add a constant here, add the matching boolean column to
+ * {@link PatientShare}, and add a {@code SectionLoader} bean. Existing services
+ * iterate this enum and don't need to change.
+ */
 public enum ProntuarioSection {
     PROFILE      ("profile",       PatientShare::getShareProfile,       PatientShare::setShareProfile),
     ANAMNESE     ("anamnese",      PatientShare::getShareAnamnese,      PatientShare::setShareAnamnese),

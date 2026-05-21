@@ -28,7 +28,7 @@ public class PatientShareMapper {
         return n;
     }
 
-
+    /** Patient-facing view: "to whom did I share". */
     public Map<String, Object> toSharedDoctorView(PatientShare share, Doctor doctor) {
         Map<String, Object> row = new LinkedHashMap<>();
         row.put("doctorId", share.getDoctorId());
