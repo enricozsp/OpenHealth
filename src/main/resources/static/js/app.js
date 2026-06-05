@@ -61,9 +61,12 @@ $$('.tab').forEach(btn => {
     });
 });
 
+let CURRENT_PATIENT_ID = null;
+
 // -------- Perfil (singleton) --------
 async function loadProfile() {
     const data = await api('/api/profile');
+    CURRENT_PATIENT_ID = data && data.id ? data.id : null;
     fillForm($('#profileForm'), data);
     $('#ownerName').textContent = data.fullName || 'Meu Prontuário';
 }
@@ -467,6 +470,101 @@ $$('.tab').forEach(btn => {
     }
 });
 
+// -------- Recados do médico (paciente) --------
+function formatRecadoWhen(iso) {
+    if (!iso) return '';
+    try {
+        return new Date(iso).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    } catch (e) { return iso; }
+}
+
+function recadoStatusBadge(r) {
+    if (r.status === 'LIDO') {
+        const when = r.dataLeitura ? ' em ' + formatRecadoWhen(r.dataLeitura) : '';
+        return `<span class="recado-status lido">Lido${escapeHtml(when)}</span>`;
+    }
+    return '<span class="recado-status nao-lido">Novo</span>';
+}
+
+function updateUnreadBadge(items) {
+    const badge = $('#recadosUnreadBadge');
+    if (!badge) return;
+    const naoLidos = (items || []).filter(r => r.status !== 'LIDO').length;
+    if (naoLidos > 0) {
+        badge.textContent = String(naoLidos);
+        badge.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderRecadosPaciente(items) {
+    const list = $('#recadosPacienteList');
+    if (!list) return;
+    if (!items || !items.length) {
+        list.innerHTML = '<div class="empty">Nenhum recado recebido ainda.</div>';
+        updateUnreadBadge([]);
+        return;
+    }
+    list.innerHTML = items.map(r => `
+        <div class="record recado-paciente ${r.status === 'LIDO' ? 'lido' : 'nao-lido'}" data-recado-id="${r.id}">
+            <div class="record-header">
+                <div class="recado-heading">
+                    <div class="record-title">${escapeHtml(r.titulo)}</div>
+                    <div class="record-meta">De Dr(a). ${escapeHtml(r.medicoNome || 'Médico')} · enviado em ${escapeHtml(formatRecadoWhen(r.dataCriacao))}</div>
+                </div>
+                ${recadoStatusBadge(r)}
+            </div>
+            <div class="recado-mensagem">${escapeHtml(r.mensagem)}</div>
+            ${r.status !== 'LIDO' ? `
+                <div class="record-actions recado-actions">
+                    <button type="button" class="primary" data-mark-read="${r.id}">Marcar como lido</button>
+                </div>
+            ` : ''}
+        </div>
+    `).join('');
+
+    list.querySelectorAll('[data-mark-read]').forEach(btn => {
+        btn.addEventListener('click', () => marcarRecadoComoLido(parseInt(btn.dataset.markRead, 10)));
+    });
+
+    updateUnreadBadge(items);
+}
+
+async function loadRecadosPaciente() {
+    if (!CURRENT_PATIENT_ID) {
+        try { await loadProfile(); } catch (e) { /* ignore */ }
+    }
+    if (!CURRENT_PATIENT_ID) return;
+    const list = $('#recadosPacienteList');
+    if (list) list.innerHTML = '<div class="empty">Carregando...</div>';
+    try {
+        const items = await api('/api/recados-medicos/paciente/' + CURRENT_PATIENT_ID);
+        renderRecadosPaciente(items);
+    } catch (err) {
+        if (list) list.innerHTML = `<div class="empty">Falha ao carregar recados: ${escapeHtml(err.message)}</div>`;
+    }
+}
+
+async function marcarRecadoComoLido(recadoId) {
+    try {
+        await api('/api/recados-medicos/' + recadoId + '/lido', { method: 'PATCH' });
+        toast('Recado marcado como lido');
+        await loadRecadosPaciente();
+    } catch (err) {
+        toast('Falha: ' + err.message, true);
+    }
+}
+
+const _btnRecadosRefresh = $('#recadosPacienteRefresh');
+if (_btnRecadosRefresh) _btnRecadosRefresh.addEventListener('click', loadRecadosPaciente);
+
+$$('.tab').forEach(btn => {
+    if (btn.dataset.tab === 'recados') {
+        btn.addEventListener('click', () => loadRecadosPaciente().catch(e => toast(e.message, true)));
+    }
+});
+
 // -------- Logout --------
 $('#logoutBtn').addEventListener('click', async () => {
     try {
@@ -492,7 +590,8 @@ $('#logoutBtn').addEventListener('click', async () => {
             refreshVaccines(),
             refreshSurgeries(),
             refreshConsultations(),
-            refreshExams()
+            refreshExams(),
+            loadRecadosPaciente()
         ]);
     } catch (err) {
         toast('Falha ao carregar dados: ' + err.message, true);

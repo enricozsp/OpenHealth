@@ -39,7 +39,8 @@ public class OpenApiConfig {
                 .group("paciente")
                 .pathsToMatch("/api/auth/**", "/api/profile/**", "/api/anamnese/**",
                         "/api/allergies/**", "/api/vaccines/**", "/api/surgeries/**",
-                        "/api/consultations/**", "/api/exams/**", "/api/sharing/**")
+                        "/api/consultations/**", "/api/exams/**", "/api/sharing/**",
+                        "/api/recados-medicos/**")
                 .build();
     }
 
@@ -47,7 +48,7 @@ public class OpenApiConfig {
     public GroupedOpenApi doctorApi() {
         return GroupedOpenApi.builder()
                 .group("medico")
-                .pathsToMatch("/api/doctor-auth/**", "/api/doctor/**")
+                .pathsToMatch("/api/doctor-auth/**", "/api/doctor/**", "/api/recados-medicos/**")
                 .build();
     }
 

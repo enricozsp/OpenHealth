@@ -4,7 +4,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * Single point for session writes — keeps controllers/services from manipulating
+ * session state directly. Read paths use {@link CurrentUser} / {@link CurrentDoctor}.
+ */
 @Component
 public class SessionManager {
 

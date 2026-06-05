@@ -38,6 +38,19 @@ public class AuthFilter extends OncePerRequestFilter {
             return;
         }
 
+        // Recados médicos: rota mista, acessada tanto por paciente quanto por médico.
+        // Basta haver um dos dois autenticado na sessão.
+        if (path.startsWith("/api/recados-medicos")) {
+            Object userId = session == null ? null : session.getAttribute(SessionKeys.USER_ID);
+            Object doctorId = session == null ? null : session.getAttribute(SessionKeys.DOCTOR_ID);
+            if (userId == null && doctorId == null) {
+                unauthorized(response);
+                return;
+            }
+            chain.doFilter(request, response);
+            return;
+        }
+
         Object userId = session == null ? null : session.getAttribute(SessionKeys.USER_ID);
         if (userId == null) {
             unauthorized(response);
