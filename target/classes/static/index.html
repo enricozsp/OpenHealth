@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenHealth - Meu Prontuário</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
 <header class="topbar">
@@ -28,6 +28,7 @@
     <button class="tab" data-tab="exams">Exames</button>
     <button class="tab" data-tab="timeline">Linha do Tempo</button>
     <button class="tab" data-tab="sharing">Compartilhamento</button>
+    <button class="tab" data-tab="recados">Recados <span id="recadosUnreadBadge" class="unread-badge" style="display:none;">0</span></button>
 </nav>
 
 <main>
@@ -243,6 +244,18 @@
         <div class="timeline-undated" id="timelineUndated"></div>
     </section>
 
+    <!-- RECADOS DO MÉDICO -->
+    <section class="panel" id="panel-recados">
+        <h2>Recados do Médico</h2>
+        <p class="hint">Orientações, avisos e mensagens enviadas pelos médicos que têm acesso ao seu prontuário.</p>
+        <div class="recados-toolbar">
+            <button type="button" class="ghost" id="recadosPacienteRefresh">Atualizar</button>
+        </div>
+        <div id="recadosPacienteList" class="recados-list-paciente">
+            <div class="empty">Carregando...</div>
+        </div>
+    </section>
+
     <!-- COMPARTILHAMENTO -->
     <section class="panel" id="panel-sharing">
         <h2>Compartilhamento com médicos</h2>
@@ -267,6 +280,6 @@
 
 <div id="toast" class="toast"></div>
 
-<script src="js/app.js"></script>
+<script src="js/app.js?v=5"></script>
 </body>
 </html>

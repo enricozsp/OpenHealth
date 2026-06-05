@@ -25,7 +25,7 @@
             <h2>Requisições de compartilhamento</h2>
             <button type="button" class="ghost" id="refreshBtn">Atualizar</button>
         </div>
-        <p class="hint">Pacientes que liberaram seu prontuário para você. Clique para ver os dados.</p>
+        <p class="hint">Pacientes que liberaram seu prontuário para você. Clique em um paciente para ver os dados <b>e enviar recados</b>.</p>
         <div id="requestsList" class="requests-list">
             <div class="empty">Carregando...</div>
         </div>
@@ -35,6 +35,38 @@
         <h2 id="patientHeader">Prontuário</h2>
         <p class="hint" id="patientSubheader"></p>
         <div id="sharingBadges" class="sharing-badges"></div>
+
+        <div class="recados-block">
+            <div class="recados-header">
+                <h3>Recados para o paciente</h3>
+                <button type="button" class="ghost" id="recadosRefreshBtn">Atualizar</button>
+            </div>
+            <p class="hint">Envie orientações, avisos ou observações. O paciente verá o recado na própria conta.</p>
+
+            <div id="recadoEditBanner" class="recado-edit-banner" style="display:none;">
+                <span id="recadoEditBannerText">Editando recado</span>
+                <button type="button" class="ghost" id="recadoCancelEditBtn">Cancelar edição</button>
+            </div>
+
+            <form id="recadoForm" class="recado-form" autocomplete="off">
+                <label>Título
+                    <input name="titulo" maxlength="200" placeholder="ex.: Tomar o medicamento à noite" required>
+                </label>
+                <label>Mensagem
+                    <textarea name="mensagem" rows="4" maxlength="4000" placeholder="ex.: Iniciar Losartana 50mg 1x ao dia após o jantar. Retornar em 30 dias para reavaliação." required></textarea>
+                </label>
+                <div class="actions">
+                    <button type="submit" class="primary" id="recadoSubmitBtn">Enviar recado</button>
+                    <button type="button" class="ghost" id="recadoClearBtn">Limpar</button>
+                </div>
+            </form>
+
+            <h4 class="recados-history-title">Histórico enviado</h4>
+            <div id="recadosList" class="recados-list">
+                <div class="section-empty">Carregando...</div>
+            </div>
+        </div>
+
         <div id="prontuarioContent"></div>
     </section>
 </main>
@@ -45,6 +77,6 @@
 
 <div id="toast" class="toast"></div>
 
-<script src="js/medico.js"></script>
+<script src="js/medico.js?v=4"></script>
 </body>
 </html>

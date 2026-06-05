@@ -2,6 +2,11 @@
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+let currentDoctorId = null;
+let currentPatientId = null;
+let editingRecadoId = null;
+let recadosCache = [];
+
 const toast = (msg, isError = false) => {
     const el = $('#toast');
     el.textContent = msg;
@@ -211,15 +216,159 @@ function renderRequests(shares) {
 
 async function openProntuario(patientId, cardEl) {
     $$('.request-card').forEach(c => c.classList.toggle('active', c === cardEl));
+    // Trocar de paciente cancela qualquer edição pendente para evitar
+    // que um PUT seja disparado contra um recado de outro paciente.
+    cancelEditRecado();
     try {
         const data = await api('/api/doctor/patients/' + patientId + '/prontuario');
         if (!data.found) {
             toast('Prontuário não encontrado.', true);
             return;
         }
+        currentPatientId = patientId;
         renderProntuario(data);
+        await loadRecados();
     } catch (err) {
         toast(err.message, true);
+    }
+}
+
+function statusBadge(item) {
+    if (item.status === 'LIDO') {
+        const when = item.dataLeitura ? ' em ' + formatWhen(item.dataLeitura) : '';
+        return `<span class="recado-status lido">Lido${escapeHtml(when)}</span>`;
+    }
+    return '<span class="recado-status nao-lido">Não lido</span>';
+}
+
+function renderRecados(items) {
+    const list = $('#recadosList');
+    recadosCache = items || [];
+    if (!items || !items.length) {
+        list.innerHTML = '<div class="section-empty">Nenhum recado enviado para este paciente ainda.</div>';
+        return;
+    }
+    list.innerHTML = items.map(r => `
+        <div class="recado-card ${r.status === 'LIDO' ? 'lido' : 'nao-lido'}" data-recado-id="${r.id}">
+            <div class="recado-head">
+                <span class="recado-title">${escapeHtml(r.titulo)}</span>
+                ${statusBadge(r)}
+            </div>
+            <div class="recado-meta">Enviado em ${escapeHtml(formatWhen(r.dataCriacao))}</div>
+            <div class="recado-body">${escapeHtml(r.mensagem)}</div>
+            <div class="recado-actions">
+                <button type="button" class="ghost" data-edit-recado="${r.id}">Editar</button>
+                <button type="button" class="danger" data-del-recado="${r.id}">Excluir</button>
+            </div>
+        </div>
+    `).join('');
+
+    list.querySelectorAll('[data-edit-recado]').forEach(btn => {
+        btn.addEventListener('click', () => beginEditRecado(parseInt(btn.dataset.editRecado, 10)));
+    });
+    list.querySelectorAll('[data-del-recado]').forEach(btn => {
+        btn.addEventListener('click', () => deleteRecado(parseInt(btn.dataset.delRecado, 10)));
+    });
+}
+
+function beginEditRecado(recadoId) {
+    const r = recadosCache.find(x => x.id === recadoId);
+    if (!r) return;
+    editingRecadoId = recadoId;
+    const form = $('#recadoForm');
+    form.elements.titulo.value = r.titulo || '';
+    form.elements.mensagem.value = r.mensagem || '';
+    $('#recadoSubmitBtn').textContent = 'Salvar alterações';
+    $('#recadoEditBanner').style.display = 'flex';
+    $('#recadoEditBannerText').textContent = 'Editando: ' + r.titulo;
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    form.elements.titulo.focus();
+}
+
+function cancelEditRecado() {
+    editingRecadoId = null;
+    resetRecadoForm();
+}
+
+async function deleteRecado(recadoId) {
+    if (!confirm('Excluir este recado? Esta ação não pode ser desfeita.')) return;
+    try {
+        await api('/api/recados-medicos/' + recadoId, { method: 'DELETE' });
+        toast('Recado excluído.');
+        if (editingRecadoId === recadoId) cancelEditRecado();
+        await loadRecados();
+    } catch (err) {
+        toast('Falha ao excluir: ' + err.message, true);
+    }
+}
+
+async function loadRecados() {
+    if (!currentDoctorId || !currentPatientId) return;
+    const list = $('#recadosList');
+    list.innerHTML = '<div class="section-empty">Carregando...</div>';
+    try {
+        const items = await api(`/api/recados-medicos/medico/${currentDoctorId}/paciente/${currentPatientId}`);
+        renderRecados(items);
+    } catch (err) {
+        list.innerHTML = `<div class="section-empty error">Falha ao carregar recados: ${escapeHtml(err.message)}</div>`;
+    }
+}
+
+function resetRecadoForm() {
+    const form = $('#recadoForm');
+    if (form) form.reset();
+    editingRecadoId = null;
+    const submit = $('#recadoSubmitBtn');
+    if (submit) submit.textContent = 'Enviar recado';
+    const banner = $('#recadoEditBanner');
+    if (banner) banner.style.display = 'none';
+}
+
+async function submitRecado(ev) {
+    ev.preventDefault();
+    if (!currentDoctorId) {
+        toast('Sessão do médico não identificada.', true);
+        return;
+    }
+    if (!currentPatientId) {
+        toast('Abra o prontuário de um paciente primeiro.', true);
+        return;
+    }
+    const form = ev.currentTarget;
+    const data = new FormData(form);
+    const titulo = (data.get('titulo') || '').toString().trim();
+    const mensagem = (data.get('mensagem') || '').toString().trim();
+    if (!titulo || !mensagem) {
+        toast('Preencha título e mensagem.', true);
+        return;
+    }
+    const btn = $('#recadoSubmitBtn');
+    btn.disabled = true;
+    try {
+        if (editingRecadoId) {
+            await api('/api/recados-medicos/' + editingRecadoId, {
+                method: 'PUT',
+                body: JSON.stringify({ titulo, mensagem })
+            });
+            toast('Recado atualizado.');
+        } else {
+            await api('/api/recados-medicos', {
+                method: 'POST',
+                body: JSON.stringify({
+                    medicoId: currentDoctorId,
+                    pacienteId: currentPatientId,
+                    titulo,
+                    mensagem
+                })
+            });
+            toast('Recado enviado.');
+        }
+        resetRecadoForm();
+        await loadRecados();
+    } catch (err) {
+        toast('Falha: ' + err.message, true);
+    } finally {
+        btn.disabled = false;
     }
 }
 
@@ -232,9 +381,19 @@ async function loadRequests() {
     }
 }
 
-$('#refreshBtn').addEventListener('click', loadRequests);
+function on(sel, evt, fn) {
+    const el = $(sel);
+    if (el) el.addEventListener(evt, fn);
+    else console.warn('Elemento ausente para listener:', sel);
+}
 
-$('#logoutBtn').addEventListener('click', async () => {
+on('#refreshBtn', 'click', loadRequests);
+on('#recadoForm', 'submit', submitRecado);
+on('#recadoClearBtn', 'click', resetRecadoForm);
+on('#recadosRefreshBtn', 'click', loadRecados);
+on('#recadoCancelEditBtn', 'click', cancelEditRecado);
+
+on('#logoutBtn', 'click', async () => {
     try { await fetch('/api/doctor-auth/logout', { method: 'POST' }); } catch (e) { /* ignore */ }
     window.location.href = '/login-medico.html';
 });
@@ -249,6 +408,7 @@ $('#logoutBtn').addEventListener('click', async () => {
         }
         const me = await fetch('/api/doctor-auth/me').then(r => r.ok ? r.json() : null);
         if (me) {
+            currentDoctorId = me.id;
             $('#doctorName').textContent = (me.fullName || 'Médico') + (me.crm ? ' · CRM ' + me.crm : '');
         }
         await loadRequests();

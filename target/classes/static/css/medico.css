@@ -153,3 +153,187 @@
     border-radius: 8px;
     font-style: italic;
 }
+
+.recados-block {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 2px solid var(--border);
+}
+
+.recados-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.recados-block h3 {
+    margin: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.recado-form {
+    display: grid;
+    gap: 0.75rem;
+    background: var(--bg);
+    padding: 1rem 1.1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 0.75rem;
+}
+
+.recado-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-size: 0.88rem;
+    color: var(--muted);
+}
+
+.recado-form input,
+.recado-form textarea {
+    font: inherit;
+    padding: 0.55rem 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    color: var(--text);
+    resize: vertical;
+}
+
+.recado-form input:focus,
+.recado-form textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.recado-form .actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.recados-history-title {
+    margin: 1.5rem 0 0.5rem;
+    color: #1e3a8a;
+    font-size: 0.98rem;
+}
+
+.recados-list {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.recado-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid #2563eb;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+}
+
+.recado-card.nao-lido {
+    background: #eff6ff;
+    border-left-color: #1d4ed8;
+}
+
+.recado-card.lido {
+    border-left-color: #16a34a;
+}
+
+.recado-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.recado-title {
+    font-weight: 600;
+    color: #1e3a8a;
+}
+
+.recado-status {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-weight: 500;
+}
+
+.recado-status.nao-lido {
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.recado-status.lido {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.recado-meta {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+}
+
+.recado-body {
+    margin-top: 0.45rem;
+    color: var(--text);
+    white-space: pre-wrap;
+    font-size: 0.92rem;
+}
+
+.section-empty.error {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.recado-edit-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    background: #fef3c7;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    padding: 0.55rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    margin-top: 0.75rem;
+}
+
+.recado-actions {
+    display: flex;
+    gap: 0.4rem;
+    margin-top: 0.6rem;
+    justify-content: flex-end;
+}
+
+.recado-actions button {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: white;
+    color: var(--text);
+    transition: background 0.12s;
+}
+
+.recado-actions button.ghost:hover { background: #eff6ff; }
+
+.recado-actions button.danger {
+    border-color: #fca5a5;
+    color: #b91c1c;
+    background: #fff;
+}
+
+.recado-actions button.danger:hover {
+    background: #fee2e2;
+}
